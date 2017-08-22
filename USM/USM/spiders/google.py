@@ -52,7 +52,6 @@ class GoogleSpider(scrapy.Spider):
         num_snippet = response.meta['num_snip']
 
         for snippet in snippets:
-            num_snippet = num_snippet + 1
             storage_item = UsmItem()
 
             title = Selector(text=snippet).xpath("//a/b/text() | //a/text()").extract()
@@ -69,19 +68,25 @@ class GoogleSpider(scrapy.Spider):
             if cite.__len__() > 0:
                 # cite = cite[0].split("url?q=")[-1]
                 cite = cite[0]
-                for r in ['<cite>', '</cite>', '<b>', '</b>']:
+                for r in ['<cite>', '</cite>', '<b>', '</b>', '<cite class="kv">', '</cite class="kv">']:
                     cite = cite.replace(r, '')
             else:
-                cite=""
+                cite = ""
 
             if text.__len__() > 0:
                 text = text[0]
-                for r in ['<span class="st">', '</span>', '<br>', '</br>', '<b>', '</b>']:
+                for r in ['<span class="st">', '</span>', '<br>', '</br>', '<b>', '</b>', '<span class="f">',
+                          '<span class="nobr">']:
                     text = text.replace(r, '')
             else:
                 text = ""
 
             if cite != "":
+                # Todo Filter snippets here
+
+
+
+                num_snippet = num_snippet + 1
                 self.log("---------------------------------")
                 self.log("--------------TITLE--------------")
                 self.log(title)

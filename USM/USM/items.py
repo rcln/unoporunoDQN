@@ -17,4 +17,3 @@ class UsmItem(scrapy.Item):
     attr = scrapy.Field()
     engine_search = scrapy.Field()
     number_snippet = scrapy.Field()
-    pass

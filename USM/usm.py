@@ -15,7 +15,7 @@ def get_snippets(id, query):
     source = [id, query, "1"]
 
     process.crawl("googlespider", source=source)
-    process.crawl("bingspider", source=source)
+    # process.crawl("bingspider", source=source)
     # process.crawl("duckspider", source=source)
     # process.crawl("citespider", source=source)
 

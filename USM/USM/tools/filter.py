@@ -84,6 +84,11 @@ class FeatureFilter:
         vector = nominal.filter(snippet)
         return np.count_nonzero(vector) > 0
 
+    def is_lang(self, lang):
+        #http://blog.alejandronolla.com/2013/05/15/detecting-text-language-with-python-and-nltk/
+        #https://stackoverflow.com/questions/3182268/nltk-and-language-detection
+        pass
+
 
 class NominalFilter:
     def __init__(self, name):
