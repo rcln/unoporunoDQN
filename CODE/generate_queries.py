@@ -1,3 +1,5 @@
+import pickle
+
 __author__ = 'pegah'
 
 """this class is for calling each person_id from scholarship.json dDB, call its related snippets from USM and finally extract
@@ -23,7 +25,8 @@ class queries:
     def generate_query(self):
 
         name = '_'.join(self.person_info['name'].split(' '))
-        query_results = '../USM/train_db/' + self.person_id + '/test_for_' + self.person_id +'_with_query_' + name + '_.json'
+        query_results = '../USM/train_db/' + self.person_id + '/test_for_' + self.person_id +'_with_query_' + name + '_' + \
+                        self.query_id +'.json'
 
         with open(query_results) as data_file:
             data_query = json.load(data_file)
@@ -61,6 +64,26 @@ class queries:
         self.write_query_to_json(queue)
 
 
+
+
+ #test for opening the pickle list
+with open('../DATA/person_id/train_list.pkl', 'rb') as f:
+    persons_trains = pickle.load(f)
+
 #Example
-#q = queries("1390", "0")
-#q.generate_write_query_to_file()
+def genrate_all_queries(person_id):
+
+    queiries_list = ["", "PHD", "doctorate", 'institute', 'master', 'undergraduate', 'university']
+    #person_id = "1390"
+
+    for que in queiries_list:
+        q = queries(person_id, que)
+        q.generate_write_query_to_file()
+
+
+def generate_queiries_for_train(_trains):
+    for i in _trains:
+        genrate_all_queries(i)
+
+#generate all queries for all traning set
+generate_queiries_for_train(persons_trains)

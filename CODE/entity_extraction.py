@@ -73,13 +73,15 @@ def extract_entities_textrazor(snippet):
           'Y':{'entity':[], 'confidenceScore':[]} }
 
     for entity in response1.entities():
-        print(entity.json)
-        if entity.freebase_types == ['/people/person']:
-            output['RN']['entity'].append( (entity.json['entityId']).split(' ') )
-            output['RN']['confidenceScore'].append( entity.confidence_score )
-        elif entity.freebase_types == ['/organization/organization']:
-            output['U']['entity'].append( (entity.json['entityId']).split(' ') )
-            output['U']['confidenceScore'].append(entity.confidence_score)
+        #print(entity.json)
+        """if list is not empty"""
+        if len(entity.freebase_types) > 0:
+            if entity.freebase_types[0]  == ['/people/person']: #.__contains__('person'):
+                output['RN']['entity'].append( (entity.json['entityId']).split(' ') )
+                output['RN']['confidenceScore'].append( entity.confidence_score )
+            elif entity.freebase_types[0].__contains__('organization'): #== ['/organization/organization']:
+                output['U']['entity'].append( (entity.json['entityId']).split(' ') )
+                output['U']['confidenceScore'].append(entity.confidence_score)
 
         else:
             if 'type' in entity.json:
@@ -124,6 +126,7 @@ def extract_years(snippet, output):
     output['Y'] = dates_list_new
     return output
 
+#TODO this funcion needs more work to etract the entities and confidence scores more precosely and better!
 def extract_entities_confidence_score(snippet):
     """
     the main function to extract the entities and therir confident score
@@ -131,12 +134,13 @@ def extract_entities_confidence_score(snippet):
     :return: it returns a dictionary as
     """
     output = extract_entities_textrazor(snippet)
-    print('output',output)
     final_output = extract_years(snippet, output)
     return final_output
 
-print(extract_entities_confidence_score("Pegah Alizadeh was born september 21 1983 in Ahvaz, Iran. she finished her PHD at "
-                           "university of PARIS13 2016."))
+#"""Execution test"""
+#print(extract_entities_confidence_score("Pegah Alizadeh was born september 21 1983 in Ahvaz, Iran. she finished her PHD at "
+#                           "university of PARIS13 2016."))
+
 #extract_entities_textrazor("mfrm")
 
 
