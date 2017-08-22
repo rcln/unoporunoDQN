@@ -69,7 +69,7 @@ class BingSearch(scrapy.Spider):
 
             if text.__len__() > 0:
                 text = text[0]
-                for r in ["<p>", "</p>", "<strong>", "</strong>"]:
+                for r in ["<p>", "</p>", "<strong>", "</strong>", '<span class="news_dt">', '</span>']:
                     text = text.replace(r, '')
             else:
                 text = ""
