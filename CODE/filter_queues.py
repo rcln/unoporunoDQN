@@ -43,7 +43,7 @@ class queires_to_queue:
 
             for i in queques.keys():
                 if queques[i] != {'RN': {'entity': [], 'confidenceScore': []}, 'U': {'entity': [],'confidenceScore': []}, 'Y': {'entity': [], 'confidenceScore': []}}:
-                    list_q.append(i)
+                    list_q.append(queques[i])
 
             random.shuffle(list_q)
             for i in list_q:

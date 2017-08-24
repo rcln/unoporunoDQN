@@ -48,15 +48,14 @@ class queries:
 
             output['original_entities'] = original_entities
             output['queue'] = queue
-            json_data = json.dumps(output)
-
+            json_data = output
 
             newpath = r'../DATA/entities_db/'+ str(self.person_id)
 
             if not os.path.exists(newpath):
                 os.makedirs(newpath)
 
-            with open(newpath + '/queue'+ str(self.query_id), 'w') as outfile:
+            with open(newpath + '/queue_'+ str(self.query_id) +'.json', 'w') as outfile:
                 json.dump(json_data, outfile)
 
     def generate_write_query_to_file(self):
@@ -73,11 +72,11 @@ with open('../DATA/person_id/train_list.pkl', 'rb') as f:
 #Example
 def genrate_all_queries(person_id):
 
-    queiries_list = ["", "PHD", "doctorate", 'institute', 'master', 'undergraduate', 'university']
+    queiries_list = ["", "PHD", "doctorate", "institute", "master", "undergraduate", "university"]
     #person_id = "1390"
 
     for que in queiries_list:
-        q = queries(person_id, que)
+        q = queries(str(person_id), que)
         q.generate_write_query_to_file()
 
 
@@ -85,5 +84,13 @@ def generate_queiries_for_train(_trains):
     for i in _trains:
         genrate_all_queries(i)
 
+#genrate_all_queries(1390)
+
 #generate all queries for all traning set
-generate_queiries_for_train(persons_trains)
+#generate_queiries_for_train(persons_trains)
+
+
+person_id = "1390"
+que = "institute"
+q = queries(person_id, que)
+q.generate_write_query_to_file()
