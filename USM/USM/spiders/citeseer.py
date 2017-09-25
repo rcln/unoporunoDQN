@@ -6,6 +6,7 @@ from scrapy.http import FormRequest, Request
 from scrapy import Selector
 from items import UsmItem
 from tools.basic_tool import Utils
+from tools.filter import FeatureFilter, Cleaner
 
 __author__ = "Josué Fabricio Urbina González"
 
@@ -21,6 +22,7 @@ class CiteSearch(scrapy.Spider):
             self.source = source
         else:
             self.source = ""
+        self.filter = None
 
     def parse(self, response):
         type_b = self.source[-1]
@@ -34,6 +36,7 @@ class CiteSearch(scrapy.Spider):
                 request.meta['id_person'] = search[0]
                 request.meta['attr'] = search[1]
                 request.meta['search'] = search[2]
+                self.filter = FeatureFilter(search[3])
                 request.meta['num_snip'] = 0
                 yield request
 
@@ -51,7 +54,6 @@ class CiteSearch(scrapy.Spider):
 
         for snippet in snippets:
             storage_item = UsmItem()
-            num_snippet = num_snippet + 1
 
             title = Selector(text=snippet).xpath("//h3/a/node()").extract()
             # tmpTitle = Selector(text=snippet).xpath("//div[@class='pubinfo']")
@@ -79,34 +81,72 @@ class CiteSearch(scrapy.Spider):
                 text = ""
 
             if cite != "":
-                self.log("---------------------------------")
-                self.log("------------TITLE----------------")
-                self.log(title)
-                self.log("------------CITE-----------------")
-                self.log(cite)
-                self.log("------------TEXT-----------------")
-                self.log(text)
-                self.log("------------ID PERSON----------------")
-                self.log(id_person)
-                self.log("------------SEARCH---------------")
-                self.log(search)
-                self.log("--------------ATTR---------------")
-                self.log(base_attr)
-                self.log("-----------ENGINE SEARCH---------")
-                self.log(self.browser)
-                self.log("------------NUMBER SNIPPET-------")
-                self.log(num_snippet)
+                if not cite.__contains__("facebook") and not cite.__contains__("youtube"):
+                    num_snippet = num_snippet + 1
+                    text = Cleaner.clean_reserved_xml(Cleaner(), text)
+                    text = Cleaner.remove_accent(Cleaner(), text)
+                    title = Cleaner.clean_reserved_xml(Cleaner(), title)
+                    title = Cleaner.remove_accent(Cleaner(), title)
 
-                storage_item['title'] = title
-                storage_item['cite'] = cite
-                storage_item['text'] = text
-                storage_item['id_person'] = id_person
-                storage_item['search'] = search
-                storage_item['attr'] = base_attr
-                storage_item['engine_search'] = self.browser
-                storage_item['number_snippet'] = num_snippet
+                    self.log("---------------------------------")
+                    self.log("------------TITLE----------------")
+                    self.log(title)
+                    self.log("------------CITE-----------------")
+                    self.log(cite)
+                    self.log("------------TEXT-----------------")
+                    self.log(text)
+                    self.log("------------ID PERSON----------------")
+                    self.log(id_person)
+                    self.log("------------SEARCH---------------")
+                    self.log(search)
+                    self.log("--------------ATTR---------------")
+                    self.log(base_attr)
+                    self.log("-----------ENGINE SEARCH---------")
+                    self.log(self.browser)
+                    self.log("------------NUMBER SNIPPET-------")
+                    self.log(num_snippet)
 
-                itemproc.process_item(storage_item, self)
+                    storage_item['title'] = title
+                    storage_item['cite'] = cite
+                    storage_item['text'] = text
+                    storage_item['id_person'] = id_person
+                    storage_item['search'] = search
+                    storage_item['attr'] = base_attr
+                    storage_item['engine_search'] = self.browser
+                    storage_item['number_snippet'] = num_snippet
+
+                    itemproc.process_item(storage_item, self)
+                # if not cite.__contains__("facebook") and not cite.__contains__("youtube"):
+                #     if self.filter.has_nominal(title) or self.filter.has_nominal(text):
+                #         num_snippet = num_snippet + 1
+                #         self.log("---------------------------------")
+                #         self.log("------------TITLE----------------")
+                #         self.log(title)
+                #         self.log("------------CITE-----------------")
+                #         self.log(cite)
+                #         self.log("------------TEXT-----------------")
+                #         self.log(text)
+                #         self.log("------------ID PERSON----------------")
+                #         self.log(id_person)
+                #         self.log("------------SEARCH---------------")
+                #         self.log(search)
+                #         self.log("--------------ATTR---------------")
+                #         self.log(base_attr)
+                #         self.log("-----------ENGINE SEARCH---------")
+                #         self.log(self.browser)
+                #         self.log("------------NUMBER SNIPPET-------")
+                #         self.log(num_snippet)
+                #
+                #         storage_item['title'] = title
+                #         storage_item['cite'] = cite
+                #         storage_item['text'] = text
+                #         storage_item['id_person'] = id_person
+                #         storage_item['search'] = search
+                #         storage_item['attr'] = base_attr
+                #         storage_item['engine_search'] = self.browser
+                #         storage_item['number_snippet'] = num_snippet
+                #
+                #         itemproc.process_item(storage_item, self)
 
         num = response.xpath("//div[@id='result_info']/strong/text()").extract()
 
@@ -114,7 +154,7 @@ class CiteSearch(scrapy.Spider):
         self.log(num[0].split(' ')[2])
         num = num[0].split(' ')[2]
 
-        if int(num) < 60:
+        if int(num) < 60 and num_snippet < 10:
             url = response.xpath("//div[@id='result_info']"
                                  "/div[@id='pager']/a/@href").extract()
             self.log("------------URL TO FOLLOW ------------")
