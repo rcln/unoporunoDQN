@@ -4,8 +4,9 @@
 import nltk
 import numpy as np
 import re
+import langid
 
-__author__ = "Josué Fabricio Urbina González"
+__author__ = "Josué Fabricio Urbina González && Carl Theodoro Posthuma Solis"
 
 """
 Personal Notes:
@@ -84,10 +85,14 @@ class FeatureFilter:
         vector = nominal.filter(snippet)
         return np.count_nonzero(vector) > 0
 
-    def is_lang(self, lang):
-        #http://blog.alejandronolla.com/2013/05/15/detecting-text-language-with-python-and-nltk/
-        #https://stackoverflow.com/questions/3182268/nltk-and-language-detection
-        pass
+    @staticmethod
+    def is_lang(text):
+        # http://blog.alejandronolla.com/2013/05/15/detecting-text-language-with-python-and-nltk/
+        # https://stackoverflow.com/questions/3182268/nltk-and-language-detection
+        # pass
+        #Returns 'en','es','de',...
+        return langid.classify(text)[0]
+
 
 
 class NominalFilter:

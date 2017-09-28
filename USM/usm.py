@@ -8,8 +8,7 @@ import os, glob, json
 __author__ = "Josué Fabricio Urbina González && Carl Theodoro Posthuma Solis"
 
 # todo the closing files creates more than one '}' if repeated
-# todo filter and only store the english
-# todo create MEGAUPLOAD file...?
+# todo create MEGAUPLOAD file...? theo knows how
 
 process = CrawlerProcess(get_project_settings())
 
