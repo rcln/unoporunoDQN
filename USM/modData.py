@@ -1,5 +1,5 @@
 import os
-
+# Todo try using jsonfy
 folders = []
 
 for folder in folders:

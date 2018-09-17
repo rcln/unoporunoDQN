@@ -7,6 +7,7 @@ from scrapy import Selector
 from items import UsmItem
 from tools.basic_tool import Utils
 from tools.filter import FeatureFilter, Cleaner
+from datetime import datetime
 
 __author__ = "Josué Fabricio Urbina González"
 
@@ -15,6 +16,7 @@ class CiteSearch(scrapy.Spider):
     name = "citespider"
     start_urls = ["http://citeseerx.ist.psu.edu/"]
     browser = 3
+    STATUS_OK = 200
 
     def __init__(self, source=None, *args, **kwargs):
         super(CiteSearch, self).__init__(*args, **kwargs)
@@ -25,6 +27,9 @@ class CiteSearch(scrapy.Spider):
         self.filter = None
 
     def parse(self, response):
+        if response.status != self.STATUS_OK:
+            pass
+
         type_b = self.source[-1]
         if self.source != "":
             if type_b == "1":
@@ -42,6 +47,11 @@ class CiteSearch(scrapy.Spider):
 
     def cite_selector(self, response):
         # Utils.create_page(Utils(), response.body, "-citeseerx")
+
+        if response.status != self.STATUS_OK:
+            with open("STATUS_LOG.txt", "a") as log_file:
+                log_file.write(response.status + " " + self.browser + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+
 
         base_url = "http://citeseerx.ist.psu.edu/"
         snippets = response.xpath("//div[@class='result']").extract()
@@ -121,13 +131,12 @@ class CiteSearch(scrapy.Spider):
 
                         itemproc.process_item(storage_item, self)
 
-
         num = response.xpath("//div[@id='result_info']/strong/text()").extract()
 
         self.log("----------NUM OF ELEMENTS---------")
         self.log(num[0].split(' ')[2])
         num = num[0].split(' ')[2]
-
+        # ToDo Add constant names
         if int(num) < 60 and num_snippet < 10:
             url = response.xpath("//div[@id='result_info']"
                                  "/div[@id='pager']/a/@href").extract()

@@ -7,9 +7,6 @@ import os, glob, json
 
 __author__ = "Josué Fabricio Urbina González && Carl Theodoro Posthuma Solis"
 
-# todo the closing files creates more than one '}' if repeated
-# todo create MEGAUPLOAD file...? theo knows how
-
 process = CrawlerProcess(get_project_settings())
 
 
@@ -33,7 +30,9 @@ def stop_all():
 
 
 def close_files():
-    with open('all_the_queries_final.json') as json_data:
+    # with open('_all_the_queries_final.json') as json_data:
+    #     d = json.load(json_data)
+    with open('jorge_task.json') as json_data:
         d = json.load(json_data)
 
     keys = list(map(int, list(d.keys())))
@@ -41,7 +40,9 @@ def close_files():
     for i in d.keys():
         tpath = "/train_db/" + str(i) + "/*.json"
         files = glob.glob(os.getcwd() + tpath)
+        # print(files)
         for file in files:
             with open(file, "a") as f:
                 f.write("}")
+
 

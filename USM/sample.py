@@ -5,8 +5,11 @@ import json
 
 # Index 0 - 4517
 
-with open('all_the_queries_final.json') as json_data:
+# with open('_all_the_queries_final.json') as json_data:
+#     d = json.load(json_data)
+with open('jorge_task.json') as json_data:
     d = json.load(json_data)
+
 
 keys = list(map(int, list(d.keys())))
 keys.sort()
@@ -18,7 +21,10 @@ keys.sort()
 
 #4514
 start = sys.argv[1]
-end = sys.argv[2]
+end = int(sys.argv[2])
+
+while end >= len(keys):
+    end = end-1
 
 testkeys = keys[int(start):int(end)]
 # print("These are the ids of the victims:\n"+str(testkeys))

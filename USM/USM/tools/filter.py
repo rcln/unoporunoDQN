@@ -94,7 +94,6 @@ class FeatureFilter:
         return langid.classify(text)[0]
 
 
-
 class NominalFilter:
     def __init__(self, name):
         name = Cleaner.remove_accent(Cleaner(), name)

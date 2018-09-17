@@ -4,8 +4,13 @@ import json
 
 print(os.getcwd())
 
-with open('all_the_queries_final.json') as json_data:
+# with open('all_the_queries_final.json') as json_data:
+#     d = json.load(json_data)
+#
+
+with open('queries_file.json') as json_data:
     d = json.load(json_data)
+
 
 keys = list(map(int, list(d.keys())))
 keys.sort()

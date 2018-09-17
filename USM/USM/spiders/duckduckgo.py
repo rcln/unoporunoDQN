@@ -19,6 +19,7 @@ class DuckSearch(scrapy.Spider):
     name = "duckspider"
     start_urls = ["https://duckduckgo.com/"]
     browser = 2
+    STATUS_OK = 200
 
     def __init__(self, source=None, *args, **kwargs):
         super(DuckSearch, self).__init__(*args, **kwargs)

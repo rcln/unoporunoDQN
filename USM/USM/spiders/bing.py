@@ -16,6 +16,7 @@ class BingSearch(scrapy.Spider):
     name = "bingspider"
     start_urls = ["https://www.bing.com/"]
     browser = 4
+    STATUS_OK = 200
 
     def __init__(self, source=None, *args, **kwargs):
         super(BingSearch, self).__init__(*args, **kwargs)
