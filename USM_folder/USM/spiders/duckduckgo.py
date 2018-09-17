@@ -1,8 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""
+    USM -> Universal Snippet Machine
 
+    Note. Only 1 page can be retrieved successfully
+"""
 import scrapy
-from scrapy.http import FormRequest, Request
+from scrapy.http import FormRequest
 from scrapy import Selector
 from items import UsmItem
 from tools.basic_tool import Utils
@@ -12,15 +16,14 @@ from datetime import datetime
 __author__ = "Josué Fabricio Urbina González"
 
 
-class BingSearch(scrapy.Spider):
-
-    name = "bingspider"
-    start_urls = ["https://www.bing.com/"]
-    browser = 4
+class DuckSearch(scrapy.Spider):
+    name = "duckspider"
+    start_urls = ["https://duckduckgo.com/"]
+    browser = 2
     STATUS_OK = 200
 
     def __init__(self, source=None, *args, **kwargs):
-        super(BingSearch, self).__init__(*args, **kwargs)
+        super(DuckSearch, self).__init__(*args, **kwargs)
         if source is not None:
             self.source = source
         else:
@@ -35,7 +38,7 @@ class BingSearch(scrapy.Spider):
 
                 request = FormRequest.from_response(response,
                                                     formdata={'q': search[2]},
-                                                    callback=self.bing_selector)
+                                                    callback=self.duck_selector)
                 request.meta['id_person'] = search[0]
                 request.meta['attr'] = search[1]
                 request.meta['search'] = search[2]
@@ -43,15 +46,18 @@ class BingSearch(scrapy.Spider):
                 request.meta['num_snip'] = 0
                 yield request
 
-    def bing_selector(self, response):
+    def duck_selector(self, response):
 
         if response.status != self.STATUS_OK:
-            with open("STATUS_LOG.txt", "a") as log_file:
+            with open("error.log.txt", "a") as log_file:
                 log_file.write(response.status + " " + self.browser + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
                 return
 
-        base_url = "https://www.bing.com/"
-        snippets = response.xpath("//li[@class='b_algo']").extract()
+        base_url = "https://duckduckgo.com/"
+        snippets = response \
+            .xpath("//div[@class='result results_links results_links_deep web-result ']") \
+            .extract()
+
         itemproc = self.crawler.engine.scraper.itemproc
 
         id_person = response.meta['id_person']
@@ -59,18 +65,27 @@ class BingSearch(scrapy.Spider):
         search = response.meta['search']
         num_snippet = response.meta['num_snip']
 
+        with open("system.log", "a") as log_file:
+            log_file.write(
+                response.status + " " + self.browser + " " + search + " " + num_snippet + " " + datetime.today().strftime(
+                    "%y-%m-%d-%H-%M"))
+
         for snippet in snippets:
             storage_item = UsmItem()
-            title = Selector(text=snippet).xpath("//h2/a/node()").extract()
-            cite = Selector(text=snippet).xpath("//h2/a/@href").extract()
-            text = Selector(text=snippet).xpath("//p").extract()
 
-            tmp_title = ""
-            for cad in title:
-                tmp_title = tmp_title+cad
-            for r in ["<strong>", "</strong>"]:
-                tmp_title = tmp_title.replace(r,'')
-            title = tmp_title
+            title = Selector(text=snippet).xpath("//div/h2/a/node()").extract()
+            cite = Selector(text=snippet).xpath("//div/a/@href").extract()
+            text = Selector(text=snippet).xpath("//div/a[@class='result__snippet']/node()").extract()
+
+            if title.__len__() > 0:
+                tmp = ""
+                for text in title:
+                    for r in ["<b>", "</b>"]:
+                        text = text.replace(r, '')
+                    tmp = tmp + text
+                title = tmp
+            else:
+                title = ""
 
             if cite.__len__() > 0:
                 cite = cite[0]
@@ -78,13 +93,16 @@ class BingSearch(scrapy.Spider):
                 cite = ""
 
             if text.__len__() > 0:
-                text = text[0]
-                for r in ["<p>", "</p>", "<strong>", "</strong>", '<span class="news_dt">', '</span>']:
-                    text = text.replace(r, '')
+                tmp = ""
+                for txt in title:
+                    for r in ["<b>", "</b>"]:
+                        txt = txt.replace(r, '')
+                    tmp = tmp + txt
+                text = tmp
             else:
                 text = ""
 
-            if cite != "":
+            if cite != "" and num_snippet < 15:
                 if not cite.__contains__("facebook") and not cite.__contains__("youtube"):
                     text = Cleaner.clean_reserved_xml(Cleaner(), text)
                     text = Cleaner.remove_accent(Cleaner(), text)
@@ -93,14 +111,14 @@ class BingSearch(scrapy.Spider):
 
                     if FeatureFilter.is_lang(text) == 'en':
                         num_snippet = num_snippet + 1
-
+                        self.log("---------------------------------")
                         self.log("------------TITLE----------------")
                         self.log(title)
                         self.log("------------CITE-----------------")
                         self.log(cite)
                         self.log("------------TEXT-----------------")
                         self.log(text)
-                        self.log("----------ID PERSON------------------")
+                        self.log("-----------ID PERSON-----------------")
                         self.log(id_person)
                         self.log("-----------SEARCH----------------")
                         self.log(search)
@@ -121,24 +139,3 @@ class BingSearch(scrapy.Spider):
                         storage_item['number_snippet'] = num_snippet
 
                         itemproc.process_item(storage_item, self)
-
-        number = response.xpath("//li[@class='b_pag']/nav[@role='navigation']"
-                                "//a[@class='sb_pagS']/text()").extract()
-        self.log("-----------NUMBER OF PAGE-------")
-        if number.__len__() > 0:
-            self.log(number[0]+"")
-            if int(number[0]) < 6 and num_snippet < 10:
-                num = int(number[0])+1
-                num = str(num)
-                res = response.xpath("//li[@class='b_pag']/nav[@role='navigation']"
-                                     "//a[@aria-label='Page "+num+"']/@href").extract()
-                for url in res:
-                    self.log("--URL TO FOLLOW--")
-                    self.log(base_url + url)
-
-                    request = Request(base_url + url, callback=self.bing_selector)
-                    request.meta['id_person'] = id_person
-                    request.meta['attr'] = base_attr
-                    request.meta['search'] = search
-                    request.meta['num_snip'] = num_snippet
-                    yield request

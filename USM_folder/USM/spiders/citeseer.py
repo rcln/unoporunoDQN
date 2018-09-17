@@ -49,7 +49,7 @@ class CiteSearch(scrapy.Spider):
         # Utils.create_page(Utils(), response.body, "-citeseerx")
 
         if response.status != self.STATUS_OK:
-            with open("STATUS_LOG.txt", "a") as log_file:
+            with open("error.log", "a") as log_file:
                 log_file.write(response.status + " " + self.browser + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
                 return
 
@@ -61,6 +61,9 @@ class CiteSearch(scrapy.Spider):
         base_attr = response.meta['attr']
         search = response.meta['search']
         num_snippet = response.meta['num_snip']
+
+        with open("system.log", "a") as log_file:
+            log_file.write(response.status + " " + self.browser + " " + search + " " + num_snippet + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
 
         for snippet in snippets:
             storage_item = UsmItem()

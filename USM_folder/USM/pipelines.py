@@ -28,8 +28,7 @@ class UsmPipeline(object):
                         "cite": str(item['cite']),
                         "text": str(item['text'])
                         }
-        path = "train_db/" + person_id + "/test_for_" + person_id + "with_query" + \
-               query.replace(" ", "_") + ".json"
+        path = "train_db/" + person_id + "/" + query.strip().replace(" ", "_") + ".json"
 
         if os.path.isfile(path):
             num = self.data_map[str(item['search'])]
