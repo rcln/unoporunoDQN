@@ -3,7 +3,7 @@ as a list of keywords for querying 4 different research engines. """
 import copy
 import numpy as np
 
-import  CODE.filter_queues as filter_queues
+import CODE.filter_queues as filter_queues
 
 QUERY_TYPES = ["", "PHD", "doctorate", "institute", "master", "undergraduate", "university"]
 ENTITIES_NUM = 3

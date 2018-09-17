@@ -7,7 +7,7 @@ import json
 
 # with open('_all_the_queries_final.json') as json_data:
 #     d = json.load(json_data)
-with open('jorge_task.json') as json_data:
+with open('queries_file.json') as json_data:
     d = json.load(json_data)
 
 

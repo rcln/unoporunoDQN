@@ -2,11 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
-from scrapy.http import FormRequest, Request
-from scrapy import Selector
-from items import UsmItem
-from tools.basic_tool import Utils
-from tools.filter import FeatureFilter, Cleaner
+from scrapy.http import FormRequest
 
 __author__ = "Josué Fabricio Urbina González && Carl Theodoro Posthuma Solis"
 
@@ -18,9 +14,12 @@ class ResearchGate(scrapy.Spider):
     STATUS_OK = 200
 
     def parse(self, response):
-        return FormRequest.from_response(response, formdata={'email': '', 'pass': ''},
-                                  callback=self.after_login)
+        search_text = "Carl Posthuma"
+        request = FormRequest.from_response(response,
+                                            formdata={'q': search_text},
+                                            callback=self.google_selector)
+        self.log(request.url)
 
-    def after_login(self, response):
-        pass
+        import pdb; pdb.set_trace()
+
 

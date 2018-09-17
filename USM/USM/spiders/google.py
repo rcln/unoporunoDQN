@@ -47,6 +47,12 @@ class GoogleSpider(scrapy.Spider):
                 yield request
 
     def google_selector(self, response):
+
+        if response.status != self.STATUS_OK:
+            with open("STATUS_LOG.txt", "a") as log_file:
+                log_file.write(response.status + " " + self.browser + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+                return
+
         base_url = "https://www.google.com/"
         snippets = response.xpath("//div[@class='g']").extract()
         itemproc = self.crawler.engine.scraper.itemproc
