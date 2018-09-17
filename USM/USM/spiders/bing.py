@@ -46,8 +46,8 @@ class BingSearch(scrapy.Spider):
     def bing_selector(self, response):
 
         if response.status != self.STATUS_OK:
-            with open("error.log.txt", "a") as log_file:
-                log_file.write(response.status + " " + self.browser + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+            with open("error.log", "a") as log_file:
+                log_file.write(response.status + " " + str(self.browser) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
                 return
 
         base_url = "https://www.bing.com/"
@@ -60,9 +60,8 @@ class BingSearch(scrapy.Spider):
         num_snippet = response.meta['num_snip']
 
         with open("system.log", "a") as log_file:
-            log_file.write(
-                response.status + " " + self.browser + " " + search + " " + num_snippet + " " + datetime.today().strftime(
-                    "%y-%m-%d-%H-%M"))
+            log_file.write(response.status + " " + str(self.browser) + " " + str(search) + " " + str(num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+
 
         for snippet in snippets:
             storage_item = UsmItem()
