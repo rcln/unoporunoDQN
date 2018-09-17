@@ -66,7 +66,7 @@ class DuckSearch(scrapy.Spider):
         num_snippet = response.meta['num_snip']
 
         with open("system.log", "a") as log_file:
-            log_file.write(response.status + " " + str(self.browser) + " " + str(search) + " " + str(num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+            log_file.write(str(response.status) + " " + str(self.browser) + " " + str(search) + " " + str(num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
 
 
         for snippet in snippets:
