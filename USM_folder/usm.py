@@ -18,7 +18,7 @@ def get_snippets(id, query):
     process.crawl("bingspider", source=source)
     process.crawl("duckspider", source=source)
     process.crawl("citespider", source=source)
-    # process.crawl("research_gate", source=source)
+    #process.crawl("research_gate", source=source)
 
 
 def start_all():
