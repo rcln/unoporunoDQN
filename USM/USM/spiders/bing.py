@@ -47,7 +47,7 @@ class BingSearch(scrapy.Spider):
 
         if response.status != self.STATUS_OK:
             with open("error.log", "a") as log_file:
-                log_file.write(response.status + " " + str(self.browser) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+                log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
                 return
 
         base_url = "https://www.bing.com/"
