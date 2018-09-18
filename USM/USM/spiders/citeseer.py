@@ -30,9 +30,6 @@ class CiteSearch(scrapy.Spider):
         self.filter = None
 
     def parse(self, response):
-        if response.status != self.STATUS_OK:
-            pass
-
         type_b = self.source[-1]
         if self.source != "":
             if type_b == "1":
@@ -83,7 +80,6 @@ class CiteSearch(scrapy.Spider):
         else:
             with open('count_citeseerx.txt', 'w') as file:
                 file.write("0")
-
 
         for snippet in snippets:
             storage_item = UsmItem()
