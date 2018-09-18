@@ -31,14 +31,19 @@ class UsmPipeline(object):
         path = "train_db/" + person_id + "/" + query.strip().replace(" ", "_") + ".json"
 
         if os.path.isfile(path):
-            num = self.data_map[str(item['search'])]
-            num = num + 1
-            self.data_map[str(item['search'])] = num
 
-            cad = ",\""+str(num)+"\": "+json.dumps(data_to_dump, indent=4)
-            file = open(path, "a")
-            file.write(cad)
-            file.close()
+            try:
+                num = self.data_map[str(item['search'])]
+                num = num + 1
+                self.data_map[str(item['search'])] = num
+
+                cad = ",\""+str(num)+"\": "+json.dumps(data_to_dump, indent=4)
+                file = open(path, "a")
+                file.write(cad)
+                file.close()
+            except:
+                with open("error_key_error_google.html", "w") as log_file:
+                    log_file.write(str(self.data_map) + "\n\n\n" + str(item))
         else:
             self.data_map[str(item['search'])] = 0
             cad = "{ \"0\": "+json.dumps(data_to_dump, indent=4)
