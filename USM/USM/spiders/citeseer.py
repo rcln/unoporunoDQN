@@ -55,7 +55,7 @@ class CiteSearch(scrapy.Spider):
 
             with open("count_citeseerx.txt", 'r') as file:
                 num = file.readline()
-                with open("count_citeseerx_error.txt", 'w') as file2:
+                with open("count_citeseerx_error"+ str(num) +".txt", 'w') as file2:
                     file2.write(num)
             return
 
@@ -175,3 +175,7 @@ class CiteSearch(scrapy.Spider):
         except:
             with open("error_num_citeseer.html", "w") as log_file:
                 log_file.write(str(response.body))
+            with open("count_citeseerx.txt", 'r') as file:
+                num = file.readline()
+                with open("count_citeseerx_error"+ str(num) +".txt", 'w') as file2:
+                    file2.write(num)

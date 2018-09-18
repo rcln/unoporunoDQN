@@ -94,7 +94,7 @@ class ResearchGate(scrapy.Spider):
                     title = title_list[0]
             except:
                 title = "NO TITLE WAS FOUND, YOUR SCRAPER SUCKS!"
-            print(url, title, text, "\n\n\n\n")
+            # print(url, title, text, "\n\n\n\n")
 
             storage_item['title'] = title
             storage_item['cite'] = url
