@@ -51,7 +51,7 @@ class GoogleSpider(scrapy.Spider):
 
         if response.status != self.STATUS_OK:
             with open("error.log", "a") as log_file:
-                log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+                log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime("%y-%m-%d-%H-%M") + "\n")
                 return
 
         base_url = "https://www.google.com/"
@@ -63,8 +63,8 @@ class GoogleSpider(scrapy.Spider):
         search = response.meta['search']
         num_snippet = response.meta['num_snip']
 
-        with open("system.log", "a") as log_file:
-            log_file.write(str(response.status) + " " + str(self.browser) + " " + str(search) + " " + str(num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+        with open("system_google.log", "a") as log_file:
+            log_file.write(str(response.status) + " " + str(self.browser) + " " + str(search) + " " + str(num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M") + "\n")
 
         for snippet in snippets:
             storage_item = UsmItem()

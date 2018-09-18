@@ -50,7 +50,8 @@ class CiteSearch(scrapy.Spider):
 
         if response.status != self.STATUS_OK:
             with open("error.log", "a") as log_file:
-                log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+                log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime(
+                    "%y-%m-%d-%H-%M") + "\n")
                 return
 
         base_url = "http://citeseerx.ist.psu.edu/"
@@ -62,8 +63,9 @@ class CiteSearch(scrapy.Spider):
         search = response.meta['search']
         num_snippet = response.meta['num_snip']
 
-        with open("system.log", "a") as log_file:
-            log_file.write(str(response.status) + " " + str(self.browser) + " " + str(search) + " " + str(num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M"))
+        with open("system_citeseer.log", "a") as log_file:
+            log_file.write(str(response.status) + " " + str(self.browser) + " " + str(search) + " " + str(
+                num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M") + "\n")
 
         for snippet in snippets:
             storage_item = UsmItem()
@@ -101,7 +103,6 @@ class CiteSearch(scrapy.Spider):
                     title = Cleaner.clean_reserved_xml(Cleaner(), title)
                     title = Cleaner.remove_accent(Cleaner(), title)
 
-
                     if FeatureFilter.is_lang(text) == 'en':
                         num_snippet = num_snippet + 1
 
@@ -136,20 +137,27 @@ class CiteSearch(scrapy.Spider):
 
         num = response.xpath("//div[@id='result_info']/strong/text()").extract()
 
-        self.log("----------NUM OF ELEMENTS---------")
-        self.log(num[0].split(' ')[2])
-        num = num[0].split(' ')[2]
-        # ToDo Add constant names
-        if int(num) < 60 and num_snippet < 10:
-            url = response.xpath("//div[@id='result_info']"
-                                 "/div[@id='pager']/a/@href").extract()
-            self.log("------------URL TO FOLLOW ------------")
-            if url.__len__() > 0:
-                self.log(base_url + url[0])
+        try:
+            self.log("----------NUM OF ELEMENTS---------")
+            self.log(num[0].split(' ')[2])
+            num = num[0].split(' ')[2]
+            # ToDo Add constant names
+            # ['No results found']
 
-                request = Request(base_url+url[0], callback=self.cite_selector)
-                request.meta['id_person'] = id_person
-                request.meta['search'] = search
-                request.meta['attr'] = base_attr
-                request.meta['num_snip'] = num_snippet
-                yield request
+            if int(num) < 60 and num_snippet < 10:
+                url = response.xpath("//div[@id='result_info']"
+                                     "/div[@id='pager']/a/@href").extract()
+                self.log("------------URL TO FOLLOW ------------")
+                if url.__len__() > 0:
+                    self.log(base_url + url[0])
+
+                    request = Request(base_url + url[0], callback=self.cite_selector)
+                    request.meta['id_person'] = id_person
+                    request.meta['search'] = search
+                    request.meta['attr'] = base_attr
+                    request.meta['num_snip'] = num_snippet
+                    yield request
+
+        except:
+            with open("error_num_citeseer.html", "w") as log_file:
+                log_file.write(str(response.body))
