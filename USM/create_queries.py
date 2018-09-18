@@ -11,14 +11,25 @@ tags = ['PHD', 'doctorate', 'master', 'undergraduate', 'university', 'institute'
 
 dict_queries = {}
 
+
+def process(name):
+    if len(name) > 2:
+        prep = ['DE', 'LA', 'LOS', 'DEL']
+        if len(set(prep).intersection(set(name))) > 0:
+            return ' '.join(name)
+        for _ in range(int(len(name))):
+            tmp = name.pop(0)
+            name.append(tmp)
+    return ' '.join(name)
+
 for k in map(str, keys):
-    name = data_dict[k]['name'].split(' ')
-    for i in range(2):
-        tmp = name.pop(0)
-        name.append(tmp)
+    name = data_dict[k]['name']
+    name = name.replace('?', 'Ñ').split(' ')
+    name = process(name)
+
     list_queries = []
     for t in tags:
-        query = ' '.join(name) + ' ' + t
+        query = name + ' ' + t
         list_queries.append(query)
     dict_queries[k] = list_queries
 
