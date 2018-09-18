@@ -1,6 +1,7 @@
 import os
 import json
 
+__author__ = "Carl Theodoro Posthuma Solis"
 
 print(os.getcwd())
 

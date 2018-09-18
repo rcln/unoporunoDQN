@@ -1,4 +1,8 @@
 #!/bin/bash
+
+rm -rf ~/unoporunoDQN/USM/train_db/*
+python make_folders.py
+
 #for i in {0..9936..4}
 for i in {0..720..4}
 do
