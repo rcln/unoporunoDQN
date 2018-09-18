@@ -30,8 +30,8 @@ class ResearchGate(scrapy.Spider):
     def login(self, response):
         token = response.css('input[name="request_token"]::attr(value)').extract_first()
 
-        data = {'login': 'ivanvladimir@turing.iimas.unam.mx',
-                'password': '',
+        data = {'login': 'your_email',
+                'password': 'your_password',
                 'request_token': token,
                 'invalidPasswordCount': '0',
                 'setLoginCookie': 'yes'}
