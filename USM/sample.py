@@ -1,6 +1,5 @@
-import usm as u
+import usm
 import sys
-
 import json
 
 # Index 0 - 4517
@@ -8,10 +7,10 @@ import json
 # with open('_all_the_queries_final.json') as json_data:
 #     d = json.load(json_data)
 with open('queries_file.json') as json_data:
-    d = json.load(json_data)
+    query_dict = json.load(json_data)
 
 
-keys = list(map(int, list(d.keys())))
+keys = list(map(int, list(query_dict.keys())))
 keys.sort()
 
 # i = 0
@@ -32,10 +31,10 @@ testkeys = keys[int(start):int(end)]
 
 for key in testkeys:
     k = str(key)
-    for snippet in d[k]:
-        u.get_snippets(k, [snippet, d[k][-1]])
+    for snippet in query_dict[k]:
+        usm.get_snippets(k, [snippet, query_dict[k][-1]])
         # print(key, snippet)
 
-u.start_all()
+usm.start_all()
 
-u.stop_all()
+usm.stop_all()

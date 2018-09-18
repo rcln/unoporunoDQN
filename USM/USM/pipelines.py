@@ -10,6 +10,7 @@ import logging
 
 __author__ = "Josué Fabricio Urbina González && Carl Theodoro Posthuma Solis"
 
+#TODO fix this thing
 
 class UsmPipeline(object):
 
@@ -42,7 +43,7 @@ class UsmPipeline(object):
                 file.write(cad)
                 file.close()
             except:
-                with open("error_key_error_google.html", "w") as log_file:
+                with open("error_key_error_google.log", "w") as log_file:
                     log_file.write(str(self.data_map) + "\n\n\n" + str(item))
         else:
             self.data_map[str(item['search'])] = 0
