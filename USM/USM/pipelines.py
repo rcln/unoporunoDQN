@@ -44,8 +44,8 @@ class UsmPipeline(object):
                 file.write(cad)
                 file.close()
             except KeyError:
-                pdb.set_trace()
-                with open("error_key_error_google.log", "w") as log_file:
+                # pdb.set_trace()
+                with open("key_error.log", "w") as log_file:
                     log_file.write(str(self.data_map) + "\n\n\n" + str(item) + "\n" + spider.name)
                     log_file.write("\n\n" + path)
         else:
