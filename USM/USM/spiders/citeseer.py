@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import scrapy
+import os
 from scrapy.http import FormRequest, Request
 from scrapy import Selector
 from items import UsmItem
@@ -66,6 +67,16 @@ class CiteSearch(scrapy.Spider):
         with open("system_citeseer.log", "a") as log_file:
             log_file.write(str(response.status) + " " + str(self.browser) + " " + str(search) + " " + str(
                 num_snippet) + " " + datetime.today().strftime("%y-%m-%d-%H-%M") + "\n")
+
+        if os.path.isfile('count_citeseerx.txt'):
+            with open('count_citeseerx.txt', 'r') as file:
+                num = file.readline()
+            with open('count_citeseerx.txt', 'w') as file:
+                file.write(str(int(num) + 1))
+        else:
+            with open('count_citeseerx.txt', 'w') as file:
+                file.write("0")
+
 
         for snippet in snippets:
             storage_item = UsmItem()
