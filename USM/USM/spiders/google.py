@@ -140,7 +140,7 @@ class GoogleSpider(scrapy.Spider):
         number = response.xpath("//td/b/text()").extract()
         self.log("-----------NUMBER OF PAGE-----")
         self.log(number[0] + "")
-        if int(number[0]) < 6 and num_snippet < 10:
+        if int(number[0]) < 6 and num_snippet < 15:
             res = response.xpath("//td[@class='b'][@style='text-align:left']/a[@class='fl']/@href").extract()
 
             for url in res:

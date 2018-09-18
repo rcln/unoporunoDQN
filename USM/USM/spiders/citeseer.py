@@ -19,6 +19,8 @@ class CiteSearch(scrapy.Spider):
     browser = 3
     STATUS_OK = 200
 
+    custom_settings = {'DOWNLOAD_DELAY': '1'}
+
     def __init__(self, source=None, *args, **kwargs):
         super(CiteSearch, self).__init__(*args, **kwargs)
         if source is not None:
@@ -53,7 +55,12 @@ class CiteSearch(scrapy.Spider):
             with open("error.log", "a") as log_file:
                 log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime(
                     "%y-%m-%d-%H-%M") + "\n")
-                return
+
+            with open("count_citeseerx.txt", 'r') as file:
+                num = file.readline()
+                with open("count_citeseerx_error.txt", 'w') as file2:
+                    file2.write(num)
+            return
 
         base_url = "http://citeseerx.ist.psu.edu/"
         snippets = response.xpath("//div[@class='result']").extract()
@@ -155,7 +162,7 @@ class CiteSearch(scrapy.Spider):
             # ToDo Add constant names
             # ['No results found']
 
-            if int(num) < 60 and num_snippet < 10:
+            if int(num) < 60 and num_snippet < 15:
                 url = response.xpath("//div[@id='result_info']"
                                      "/div[@id='pager']/a/@href").extract()
                 self.log("------------URL TO FOLLOW ------------")
