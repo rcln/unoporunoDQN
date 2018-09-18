@@ -16,6 +16,9 @@ class ResearchGate(scrapy.Spider):
     browser = 5
     STATUS_OK = 200
 
+    custom_settings = {'DOWNLOAD_DELAY': '5',
+                       'CONCURRENT_REQUESTS': '1'}
+
     def __init__(self, source=None, *args, **kwargs):
         super(ResearchGate, self).__init__(*args, **kwargs)
         if source is not None:
@@ -30,8 +33,8 @@ class ResearchGate(scrapy.Spider):
     def login(self, response):
         token = response.css('input[name="request_token"]::attr(value)').extract_first()
 
-        data = {'login': 'your_email',
-                'password': 'your_password',
+        data = {'login': 'ivanvladimir@turing.iimas.unam.mx',
+                'password': '',
                 'request_token': token,
                 'invalidPasswordCount': '0',
                 'setLoginCookie': 'yes'}
