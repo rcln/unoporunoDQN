@@ -1,5 +1,5 @@
 #!/bin/bash
-#for i in {0..4514..4}
+#for i in {0..9936..4}
 for i in {0..720..4}
 do
     let "j = $i + 4"
