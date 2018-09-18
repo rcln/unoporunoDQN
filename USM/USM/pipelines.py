@@ -7,6 +7,7 @@ import json
 import os
 import glob
 import logging
+import pdb
 
 __author__ = "Josué Fabricio Urbina González && Carl Theodoro Posthuma Solis"
 
@@ -42,9 +43,11 @@ class UsmPipeline(object):
                 file = open(path, "a")
                 file.write(cad)
                 file.close()
-            except:
+            except KeyError:
+                pdb.set_trace()
                 with open("error_key_error_google.log", "w") as log_file:
-                    log_file.write(str(self.data_map) + "\n\n\n" + str(item))
+                    log_file.write(str(self.data_map) + "\n\n\n" + str(item) + "\n" + spider.name)
+                    log_file.write("\n\n" + path)
         else:
             self.data_map[str(item['search'])] = 0
             cad = "{ \"0\": "+json.dumps(data_to_dump, indent=4)
