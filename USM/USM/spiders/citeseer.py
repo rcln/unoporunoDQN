@@ -53,10 +53,10 @@ class CiteSearch(scrapy.Spider):
                 log_file.write(str(response.status) + " " + str(self.browser) + " " + datetime.today().strftime(
                     "%y-%m-%d-%H-%M") + "\n")
 
-            with open("count_citeseerx.txt", 'r') as file:
-                num = file.readline()
-                with open("count_citeseerx_error"+ str(num) +".txt", 'w') as file2:
-                    file2.write(num)
+            # with open("count_citeseerx.txt", 'r') as file:
+            #     num = file.readline()
+            #     with open("count_citeseerx_error"+ str(num) +".txt", 'w') as file2:
+            #         file2.write(num)
             return
 
         base_url = "http://citeseerx.ist.psu.edu/"
@@ -175,7 +175,3 @@ class CiteSearch(scrapy.Spider):
         except:
             with open("error_num_citeseer.html", "w") as log_file:
                 log_file.write(str(response.body))
-            with open("count_citeseerx.txt", 'r') as file:
-                num = file.readline()
-                with open("count_citeseerx_error"+ str(num) +".txt", 'w') as file2:
-                    file2.write(num)

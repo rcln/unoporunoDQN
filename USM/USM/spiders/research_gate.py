@@ -16,7 +16,8 @@ class ResearchGate(scrapy.Spider):
     browser = 5
     STATUS_OK = 200
 
-    custom_settings = {'CONCURRENT_REQUESTS': '1',
+    custom_settings = {'DOWNLOAD_DELAY': '3',
+                       'CONCURRENT_REQUESTS': '1',
                        'COOKIES_ENABLED': 'True'}
 
     def __init__(self, source=None, *args, **kwargs):
