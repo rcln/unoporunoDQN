@@ -16,7 +16,7 @@ class ResearchGate(scrapy.Spider):
     browser = 5
     STATUS_OK = 200
 
-    custom_settings = {'DOWNLOAD_DELAY': '3',
+    custom_settings = {'DOWNLOAD_DELAY': '10',
                        'CONCURRENT_REQUESTS': '1',
                        'COOKIES_ENABLED': 'True'}
 

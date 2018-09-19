@@ -20,7 +20,7 @@ class GoogleSpider(scrapy.Spider):
     start_urls = ["https://www.google.com"]
     browser = 1
     STATUS_OK = 200
-    custom_settings = {'DOWNLOAD_DELAY': '5',
+    custom_settings = {'DOWNLOAD_DELAY': '10',
                        'CONCURRENT_REQUESTS': '1'}
 
     def __init__(self, source=None, *args, **kwargs):
