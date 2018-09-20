@@ -151,6 +151,9 @@ class CiteSearch(scrapy.Spider):
 
         num = response.xpath("//div[@id='result_info']/strong/text()").extract()
 
+        if num == [] or num == ['No results found']:
+            return
+
         try:
             self.log("----------NUM OF ELEMENTS---------")
             self.log(num[0].split(' ')[2])

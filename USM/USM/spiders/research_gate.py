@@ -97,6 +97,24 @@ class ResearchGate(scrapy.Spider):
                 title = "NO TITLE WAS FOUND, YOUR SCRAPER SUCKS!"
             # print(url, title, text, "\n\n\n\n")
 
+            self.log("---------------------------------")
+            self.log("--------------TITLE--------------")
+            self.log(title)
+            self.log("-------------CITE----------------")
+            self.log(url)
+            self.log("---------------TEXT--------------")
+            self.log(text)
+            self.log("------------ID PERSON------------")
+            self.log(id_person)
+            self.log("------------SEARCH---------------")
+            self.log(search)
+            self.log("--------------ATTR---------------")
+            self.log(base_attr)
+            self.log("-----------ENGINE SEARCH---------")
+            self.log(self.browser)
+            self.log("------------NUMBER SNIPPET-------")
+            self.log(num_snippet)
+
             storage_item['title'] = title
             storage_item['cite'] = url
             storage_item['text'] = text
